@@ -38,6 +38,7 @@
       margin: 4px 0;
     }
 
+    /* Sidebar */
     #sidebar {
       height: 100%;
       width: 0;
@@ -78,6 +79,7 @@
       font-size: 36px;
     }
 
+    /* Form Order */
     #addOrderForm {
       display: none;
       margin: 20px;
@@ -91,6 +93,7 @@
       border: 1px solid #ccc;
     }
 
+    /* Tabel */
     #ordersTable {
       width: 95%;
       margin: 20px auto;
@@ -126,6 +129,15 @@
       background-color: #2196F3;
     }
 
+    /* Efek Bintang */
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: -1;
+      pointer-events: none;
+    }
     .stars::before, .stars::after {
       content: '';
       position: absolute;
@@ -133,65 +145,23 @@
       height: 2px;
       background: white;
       box-shadow:
-        50px 80px white, 100px 150px white, 150px 200px white,
-        200px 250px white, 250px 300px white, 300px 350px white,
-        350px 400px white, 400px 450px white, 450px 500px white,
-        500px 550px white, 550px 600px white, 600px 650px white,
-        650px 700px white, 700px 750px white, 750px 800px white,
-        800px 850px white, 850px 900px white, 900px 950px white,
-        300px 100px white, 700px 200px white, 1000px 400px white,
-        200px 600px white, 900px 100px white, 1200px 300px white;
+        50px 80px white, 100px 200px white, 150px 300px white, 200px 400px white,
+        250px 500px white, 300px 600px white, 350px 700px white, 400px 800px white,
+        450px 900px white, 500px 100px white, 550px 200px white, 600px 300px white,
+        650px 400px white, 700px 500px white, 750px 600px white, 800px 700px white,
+        850px 800px white, 900px 900px white, 950px 1000px white, 1000px 1100px white;
       animation: twinkle 4s infinite ease-in-out;
-    }
-    .stars {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: -2;
     }
 
     @keyframes twinkle {
       0%, 100% { opacity: 0.8; }
       50% { opacity: 0.3; }
     }
-
-    .meteor {
-      position: fixed;
-      top: -50px;
-      left: -100px;
-      width: 2px;
-      height: 80px;
-      background: linear-gradient(45deg, white, transparent);
-      opacity: 0.7;
-      transform: rotate(45deg);
-      animation: meteorFall 5s infinite;
-      z-index: -1;
-    }
-
-    @keyframes meteorFall {
-      0% {
-        transform: translate(-100px, -100px) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(100vw, 100vh) rotate(45deg);
-        opacity: 0;
-      }
-    }
   </style>
 </head>
 <body>
-
+  <!-- Bintang -->
   <div class="stars"></div>
-  <div class="meteor"></div>
-
-  <audio id="bgMusic" autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_74a928b48d.mp3?filename=nebula-space-ambient-110624.mp3" type="audio/mpeg">
-    Browser Anda tidak mendukung audio.
-  </audio>
-
-  <button onclick="toggleMusic()" style="position:absolute; right:10px; top:10px; z-index:10; background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; border-radius:8px;">Mute</button>
 
   <header>
     <div id="hamburger" onclick="openSidebar()">
@@ -258,18 +228,6 @@
     function toggleLoginForm() {
       const form = document.getElementById("loginForm");
       form.style.display = form.style.display === "none" ? "block" : "none";
-    }
-
-    function toggleMusic() {
-      const audio = document.getElementById("bgMusic");
-      const btn = event.target;
-      if (audio.paused) {
-        audio.play();
-        btn.textContent = "Mute";
-      } else {
-        audio.pause();
-        btn.textContent = "Play";
-      }
     }
 
     function login() {
