@@ -5,111 +5,114 @@
   <title>list Order/PO</title>
   <style>
     body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    background-color: #1410ec;
-    color: white;
-    padding: 10px;
-  }
-  header h1 {
-    flex: 1;
-    text-align: center;
-    font-size: 20px;
-    margin: 0;
-  }
-  #hamburger {
-    cursor: pointer;
-    width: 30px;
-  }
-  #hamburger div {
-    width: 25px;
-    height: 4px;
-    background-color: rgb(255, 255, 255);
-    margin: 4px 0;
-  }
-  #sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #333;
-    overflow-x: hidden;
-    transition: 0.3s;
-    padding-top: 60px;
-  }
-  #sidebar a, #sidebar form, #sidebar button {
-    padding: 8px 32px;
-    color: white;
-    display: block;
-    text-decoration: none;
-    background: none;
-    border: none;
-    text-align: left;
-  }
-  #sidebar input {
-    width: 80%;
-    padding: 6px;
-    margin: 5px auto;
-    display: block;
-    border-radius: 4px;
-    border: none;
-  }
-  #sidebar button {
-    background-color: #4c5eaf;
-    cursor: pointer;
-  }
-  #sidebar .closebtn {
-    position: absolute;
-    top: 0;
-    right: 15px;
-    font-size: 36px;
-  }
-  #addOrderForm {
-    display: none;
-    margin: 20px;
-    max-width: 500px;
-  }
-  #addOrderForm input, #addOrderForm select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  #ordersTable {
-    width: 95%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background: #fff;
-  }
-  #ordersTable th, #ordersTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  #ordersTable th {
-    background-color: #f2f2f2;
-  }
-  .admin-btn {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  .edit-btn {
-    background-color: #2196F3;
-  }
-  img.preview {
-    max-width: 100px;
-    height: auto;
-  }
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      background-color: #0a06fc;
+      color: white;
+      padding: 10px;
+    }
+    header h1 {
+      flex: 1;
+      text-align: center;
+      font-size: 20px;
+      margin: 0;
+    }
+    #hamburger {
+      cursor: pointer;
+      width: 30px;
+    }
+    #hamburger div {
+      width: 25px;
+      height: 4px;
+      background-color: white;
+      margin: 4px 0;
+    }
+    #sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #333;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+    }
+    #sidebar a, #sidebar form, #sidebar button {
+      padding: 8px 32px;
+      color: white;
+      display: block;
+      text-decoration: none;
+      background: none;
+      border: none;
+      text-align: left;
+    }
+    #sidebar input {
+      width: 80%;
+      padding: 6px;
+      margin: 5px auto;
+      display: block;
+      border-radius: 4px;
+      border: none;
+    }
+    #sidebar button {
+      background-color: #0a06fc;
+  
+      cursor: pointer;
+    }
+    #sidebar .closebtn {
+      position: absolute;
+      top: 0;
+      right: 15px;
+      font-size: 36px;
+    }
+    #addOrderForm {
+      display: none;
+      margin: 20px;
+      max-width: 500px;
+    }
+    #addOrderForm input, #addOrderForm select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #ordersTable {
+      width: 95%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    #ordersTable th, #ordersTable td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    #ordersTable th {
+      background-color: #f2f2f2;
+    }
+    #ordersTable img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .admin-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .edit-btn {
+      background-color: #2196F3;
+    }
   </style>
 </head>
 <body>
@@ -143,12 +146,14 @@
       <option value="PO">PO</option>
       <option value="Done">Done</option>
     </select>
+    <input type="file" id="gambar" accept="image/*" />
     <button onclick="saveOrder()">Simpan Order</button>
   </div>
 
   <table id="ordersTable">
     <thead>
       <tr>
+        <th>Gambar</th>
         <th>Nama</th>
         <th>Jumlah</th>
         <th>Harga</th>
@@ -206,27 +211,41 @@
       const pemesan = document.getElementById("pemesan").value;
       const tanggal = document.getElementById("tanggal").value;
       const status = document.getElementById("status").value;
+      const gambarInput = document.getElementById("gambar");
 
       if (!nama || !jumlah || !harga || !pemesan || !tanggal || !status) {
         alert("Lengkapi semua data!");
         return;
       }
 
-      let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+      const orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
-      const newOrder = { nama, jumlah, harga, pemesan, tanggal, status };
+      const handleSave = (gambarBase64) => {
+        const newOrder = { nama, jumlah, harga, pemesan, tanggal, status, gambar: gambarBase64 };
 
-      if (editIndex >= 0) {
-        orders[editIndex] = newOrder;
-        editIndex = -1;
-        document.getElementById("formTitle").innerText = "Tambah Order";
+        if (editIndex >= 0) {
+          orders[editIndex] = newOrder;
+          editIndex = -1;
+          document.getElementById("formTitle").innerText = "Tambah Order";
+        } else {
+          orders.push(newOrder);
+        }
+
+        localStorage.setItem("orders", JSON.stringify(orders));
+        document.getElementById("addOrderForm").reset();
+        displayOrders();
+      };
+
+      if (gambarInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          handleSave(e.target.result);
+        };
+        reader.readAsDataURL(gambarInput.files[0]);
       } else {
-        orders.push(newOrder);
+        const existingImage = editIndex >= 0 ? orders[editIndex].gambar : "";
+        handleSave(existingImage);
       }
-
-      localStorage.setItem("orders", JSON.stringify(orders));
-      document.getElementById("addOrderForm").reset();
-      displayOrders();
     }
 
     function displayOrders() {
@@ -237,6 +256,7 @@
       orders.forEach((order, i) => {
         const row = document.createElement("tr");
         row.innerHTML = `
+          <td><img src="${order.gambar || ''}" alt="-" /></td>
           <td>${order.nama}</td>
           <td>${order.jumlah}</td>
           <td>Rp ${order.harga}</td>
@@ -272,12 +292,11 @@
       document.getElementById("pemesan").value = order.pemesan;
       document.getElementById("tanggal").value = order.tanggal;
       document.getElementById("status").value = order.status;
-      document.getElementById("formTitle").innerText = "Edit Order";
       editIndex = index;
+      document.getElementById("formTitle").innerText = "Edit Order";
       document.getElementById("addOrderForm").scrollIntoView({ behavior: "smooth" });
     }
 
-    // Cek status login saat halaman dibuka
     if (localStorage.getItem("isAdmin") === "true") {
       isAdmin = true;
       document.getElementById("addOrderForm").style.display = "block";
