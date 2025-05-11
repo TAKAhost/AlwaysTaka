@@ -2,21 +2,24 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>List Order/PO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f5f7fa;
+      background-color: #f4f4f4;
     }
     header {
       display: flex;
       align-items: center;
-      background-color: #1e90ff;
+      background-color: #0a06fc;
       color: white;
-      padding: 12px 16px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     header h1 {
       flex: 1;
@@ -32,46 +35,43 @@
       width: 25px;
       height: 3px;
       background-color: white;
-      margin: 5px 0;
+      margin: 4px 0;
     }
-
     #sidebar {
       height: 100%;
       width: 0;
       position: fixed;
       top: 0;
       left: 0;
-      background-color: #2c3e50;
+      background-color: #333;
       overflow-x: hidden;
       transition: 0.3s;
       padding-top: 60px;
       z-index: 1000;
     }
     #sidebar a, #sidebar form, #sidebar button {
-      padding: 12px 24px;
+      padding: 10px 25px;
       color: white;
       display: block;
       text-decoration: none;
-      border: none;
       background: none;
+      border: none;
       text-align: left;
+      font-size: 16px;
     }
     #sidebar input {
       width: 80%;
       padding: 8px;
-      margin: 6px auto;
+      margin: 5px auto;
       display: block;
       border-radius: 4px;
       border: none;
     }
     #sidebar button {
-      background-color: #1e90ff;
-      border-radius: 5px;
+      background-color: #0a06fc;
+      cursor: pointer;
       margin-top: 10px;
-      transition: 0.3s;
-    }
-    #sidebar button:hover {
-      background-color: #0d6efd;
+      border-radius: 4px;
     }
     #sidebar .closebtn {
       position: absolute;
@@ -79,93 +79,67 @@
       right: 15px;
       font-size: 36px;
     }
-
+    #loginForm, #logoutBtn {
+      display: none;
+    }
     #addOrderForm {
       display: none;
-      background-color: white;
-      margin: 20px auto;
+      margin: 20px;
+      max-width: 500px;
+      background: white;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      max-width: 95%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     #addOrderForm input, #addOrderForm select {
       width: 100%;
       padding: 10px;
-      margin-bottom: 12px;
-      border-radius: 6px;
+      margin-bottom: 10px;
+      border-radius: 4px;
       border: 1px solid #ccc;
     }
-    #addOrderForm button {
-      width: 100%;
-      background-color: #1e90ff;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #addOrderForm button:hover {
-      background-color: #0d6efd;
-    }
-
     #ordersTable {
       width: 95%;
       margin: 20px auto;
       border-collapse: collapse;
-      background: white;
+      background: #fff;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     #ordersTable th, #ordersTable td {
       border: 1px solid #ddd;
       padding: 10px;
       text-align: left;
-      font-size: 14px;
     }
     #ordersTable th {
-      background-color: #f0f4f7;
+      background-color: #0a06fc;
+      color: white;
     }
     #ordersTable img {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       object-fit: cover;
-      border-radius: 6px;
+      border-radius: 4px;
     }
     .admin-btn {
+      background-color: #f44336;
+      color: white;
       border: none;
       padding: 6px 10px;
-      border-radius: 5px;
-      font-size: 13px;
-      margin: 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
     }
     .edit-btn {
-      background-color: #1e90ff;
-      color: white;
+      background-color: #2196F3;
     }
-    .admin-btn:not(.edit-btn) {
-      background-color: #e74c3c;
-      color: white;
-    }
-
     @media (max-width: 600px) {
       header h1 {
         font-size: 16px;
       }
       #ordersTable th, #ordersTable td {
-        font-size: 12px;
-        padding: 6px;
-      }
-      #addOrderForm {
-        padding: 15px;
-      }
-      #addOrderForm input, #addOrderForm select {
-        padding: 8px;
-      }
-      #sidebar {
-        width: 100%;
+        font-size: 14px;
       }
     }
   </style>
@@ -186,7 +160,7 @@
       <input type="password" id="password" placeholder="Password" required />
       <button type="submit">Login Admin</button>
     </form>
-    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+    <button id="logoutBtn" onclick="logout()">Logout</button>
   </div>
 
   <div id="addOrderForm">
@@ -227,9 +201,14 @@
 
     function openSidebar() {
       document.getElementById("sidebar").style.width = "260px";
+      document.getElementById("loginForm").style.display = isAdmin ? "none" : "block";
+      document.getElementById("logoutBtn").style.display = isAdmin ? "block" : "none";
     }
+
     function closeSidebar() {
       document.getElementById("sidebar").style.width = "0";
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "none";
     }
 
     function login() {
@@ -240,8 +219,6 @@
         isAdmin = true;
         localStorage.setItem("isAdmin", "true");
         document.getElementById("addOrderForm").style.display = "block";
-        document.getElementById("loginForm").style.display = "none";
-        document.getElementById("logoutBtn").style.display = "block";
         closeSidebar();
         displayOrders();
       } else {
@@ -253,10 +230,8 @@
       isAdmin = false;
       localStorage.removeItem("isAdmin");
       document.getElementById("addOrderForm").style.display = "none";
-      document.getElementById("loginForm").style.display = "block";
-      document.getElementById("logoutBtn").style.display = "none";
-      displayOrders();
       closeSidebar();
+      displayOrders();
     }
 
     function saveOrder() {
@@ -352,12 +327,15 @@
       document.getElementById("addOrderForm").scrollIntoView({ behavior: "smooth" });
     }
 
+    // Jalankan saat halaman dimuat
     if (localStorage.getItem("isAdmin") === "true") {
       isAdmin = true;
       document.getElementById("addOrderForm").style.display = "block";
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("logoutBtn").style.display = "block";
     }
+
+    document.getElementById("sidebar").style.width = "0";
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("logoutBtn").style.display = "none";
 
     displayOrders();
   </script>
