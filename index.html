@@ -2,24 +2,23 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>List Order/PO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>List Order/PO - Tema Nebula</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f4f4f4;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      overflow-x: hidden;
+      color: white;
     }
     header {
       display: flex;
       align-items: center;
-      background-color: #0a06fc;
+      background-color: transparent;
       color: white;
       padding: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 2;
+      position: relative;
     }
     header h1 {
       flex: 1;
@@ -30,38 +29,39 @@
     #hamburger {
       cursor: pointer;
       width: 30px;
+      z-index: 3;
     }
     #hamburger div {
       width: 25px;
-      height: 3px;
+      height: 4px;
       background-color: white;
       margin: 4px 0;
     }
+
     #sidebar {
       height: 100%;
       width: 0;
       position: fixed;
       top: 0;
       left: 0;
-      background-color: #333;
+      background-color: rgba(0,0,0,0.9);
       overflow-x: hidden;
       transition: 0.3s;
       padding-top: 60px;
-      z-index: 1000;
+      z-index: 5;
     }
     #sidebar a, #sidebar form, #sidebar button {
-      padding: 10px 25px;
+      padding: 8px 32px;
       color: white;
       display: block;
       text-decoration: none;
       background: none;
       border: none;
       text-align: left;
-      font-size: 16px;
     }
     #sidebar input {
       width: 80%;
-      padding: 8px;
+      padding: 6px;
       margin: 5px auto;
       display: block;
       border-radius: 4px;
@@ -70,8 +70,6 @@
     #sidebar button {
       background-color: #0a06fc;
       cursor: pointer;
-      margin-top: 10px;
-      border-radius: 4px;
     }
     #sidebar .closebtn {
       position: absolute;
@@ -79,42 +77,35 @@
       right: 15px;
       font-size: 36px;
     }
-    #loginForm, #logoutBtn {
-      display: none;
-    }
+
     #addOrderForm {
       display: none;
       margin: 20px;
       max-width: 500px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     #addOrderForm input, #addOrderForm select {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       margin-bottom: 10px;
       border-radius: 4px;
       border: 1px solid #ccc;
     }
+
     #ordersTable {
       width: 95%;
       margin: 20px auto;
       border-collapse: collapse;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(3px);
     }
     #ordersTable th, #ordersTable td {
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 8px;
       text-align: left;
+      color: white;
     }
     #ordersTable th {
-      background-color: #0a06fc;
-      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
     }
     #ordersTable img {
       width: 60px;
@@ -122,29 +113,86 @@
       object-fit: cover;
       border-radius: 4px;
     }
+
     .admin-btn {
       background-color: #f44336;
       color: white;
       border: none;
-      padding: 6px 10px;
+      padding: 5px 10px;
       cursor: pointer;
       border-radius: 4px;
-      font-size: 14px;
     }
     .edit-btn {
       background-color: #2196F3;
     }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 16px;
+
+    .stars::before, .stars::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      box-shadow:
+        50px 80px white, 100px 150px white, 150px 200px white,
+        200px 250px white, 250px 300px white, 300px 350px white,
+        350px 400px white, 400px 450px white, 450px 500px white,
+        500px 550px white, 550px 600px white, 600px 650px white,
+        650px 700px white, 700px 750px white, 750px 800px white,
+        800px 850px white, 850px 900px white, 900px 950px white,
+        300px 100px white, 700px 200px white, 1000px 400px white,
+        200px 600px white, 900px 100px white, 1200px 300px white;
+      animation: twinkle 4s infinite ease-in-out;
+    }
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: -2;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.3; }
+    }
+
+    .meteor {
+      position: fixed;
+      top: -50px;
+      left: -100px;
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(45deg, white, transparent);
+      opacity: 0.7;
+      transform: rotate(45deg);
+      animation: meteorFall 5s infinite;
+      z-index: -1;
+    }
+
+    @keyframes meteorFall {
+      0% {
+        transform: translate(-100px, -100px) rotate(45deg);
+        opacity: 1;
       }
-      #ordersTable th, #ordersTable td {
-        font-size: 14px;
+      100% {
+        transform: translate(100vw, 100vh) rotate(45deg);
+        opacity: 0;
       }
     }
   </style>
 </head>
 <body>
+
+  <div class="stars"></div>
+  <div class="meteor"></div>
+
+  <audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_74a928b48d.mp3?filename=nebula-space-ambient-110624.mp3" type="audio/mpeg">
+    Browser Anda tidak mendukung audio.
+  </audio>
+
+  <button onclick="toggleMusic()" style="position:absolute; right:10px; top:10px; z-index:10; background:rgba(0,0,0,0.5); color:white; border:none; padding:6px 10px; border-radius:8px;">Mute</button>
+
   <header>
     <div id="hamburger" onclick="openSidebar()">
       <div></div><div></div><div></div>
@@ -155,12 +203,13 @@
   <div id="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
     <a href="https://wa.me/6283890156033" target="_blank">Chat Owner</a>
-    <form id="loginForm" onsubmit="login(); return false;">
+    <a href="#" onclick="toggleLoginForm()">Login Admin</a>
+    <form id="loginForm" onsubmit="login(); return false;" style="display:none;">
       <input type="text" id="username" placeholder="Username" required />
       <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login Admin</button>
+      <button type="submit">Login</button>
     </form>
-    <button id="logoutBtn" onclick="logout()">Logout</button>
+    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
   </div>
 
   <div id="addOrderForm">
@@ -201,14 +250,26 @@
 
     function openSidebar() {
       document.getElementById("sidebar").style.width = "260px";
-      document.getElementById("loginForm").style.display = isAdmin ? "none" : "block";
-      document.getElementById("logoutBtn").style.display = isAdmin ? "block" : "none";
     }
-
     function closeSidebar() {
       document.getElementById("sidebar").style.width = "0";
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("logoutBtn").style.display = "none";
+    }
+
+    function toggleLoginForm() {
+      const form = document.getElementById("loginForm");
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleMusic() {
+      const audio = document.getElementById("bgMusic");
+      const btn = event.target;
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = "Mute";
+      } else {
+        audio.pause();
+        btn.textContent = "Play";
+      }
     }
 
     function login() {
@@ -219,6 +280,8 @@
         isAdmin = true;
         localStorage.setItem("isAdmin", "true");
         document.getElementById("addOrderForm").style.display = "block";
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "block";
         closeSidebar();
         displayOrders();
       } else {
@@ -230,8 +293,10 @@
       isAdmin = false;
       localStorage.removeItem("isAdmin");
       document.getElementById("addOrderForm").style.display = "none";
-      closeSidebar();
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "none";
       displayOrders();
+      closeSidebar();
     }
 
     function saveOrder() {
@@ -327,15 +392,12 @@
       document.getElementById("addOrderForm").scrollIntoView({ behavior: "smooth" });
     }
 
-    // Jalankan saat halaman dimuat
     if (localStorage.getItem("isAdmin") === "true") {
       isAdmin = true;
       document.getElementById("addOrderForm").style.display = "block";
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "block";
     }
-
-    document.getElementById("sidebar").style.width = "0";
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("logoutBtn").style.display = "none";
 
     displayOrders();
   </script>
