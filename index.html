@@ -1,363 +1,164 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TESTIMONI TAKAHOST - Tema Nebula</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe Online</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-      overflow-x: hidden;
+      font-family: sans-serif;
+      background: #000;
       color: white;
-    }
-    header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      background-color: transparent;
-      color: white;
-      padding: 10px;
-      z-index: 2;
-      position: relative;
+      justify-content: center;
     }
-    header h1 {
-      flex: 1;
-      text-align: center;
-      font-size: 20px;
-      margin: 0;
+    h1 {
+      color: orange;
     }
-    #hamburger {
-      cursor: pointer;
-      width: 30px;
-      z-index: 3;
-    }
-    #hamburger div {
-      width: 25px;
-      height: 4px;
-      background-color: white;
-      margin: 4px 0;
-    }
-
-    /* Sidebar */
-    #sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: rgba(0,0,0,0.9);
-      overflow-x: hidden;
-      transition: 0.3s;
-      padding-top: 60px;
-      z-index: 5;
-    }
-    #sidebar a, #sidebar form, #sidebar button {
-      padding: 8px 32px;
-      color: white;
-      display: block;
-      text-decoration: none;
-      background: none;
-      border: none;
-      text-align: left;
-    }
-    #sidebar input {
-      width: 80%;
-      padding: 6px;
-      margin: 5px auto;
-      display: block;
-      border-radius: 4px;
-      border: none;
-    }
-    #sidebar button {
-      background-color: #0a06fc;
-      cursor: pointer;
-    }
-    #sidebar .closebtn {
-      position: absolute;
-      top: 0;
-      right: 15px;
-      font-size: 36px;
-    }
-
-    /* Form Order */
-    #addOrderForm {
-      display: none;
+    #board {
+      display: grid;
+      gap: 5px;
       margin: 20px;
-      max-width: 500px;
     }
-    #addOrderForm input, #addOrderForm select {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    /* Tabel */
-    #ordersTable {
-      width: 95%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(3px);
-    }
-    #ordersTable th, #ordersTable td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-      color: white;
-    }
-    #ordersTable th {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-    #ordersTable img {
+    .cell {
       width: 60px;
       height: 60px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .admin-btn {
-      background-color: #f44336;
-      color: white;
-      border: none;
-      padding: 5px 10px;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #222;
+      border-radius: 10px;
       cursor: pointer;
-      border-radius: 4px;
     }
-    .edit-btn {
-      background-color: #2196F3;
+    .cell.X { background: #3498db; }
+    .cell.O { background: #e74c3c; }
+    .controls, #status, #scoreboard {
+      margin-top: 10px;
     }
-
-    /* Efek Bintang */
-    .stars {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: -1;
-      pointer-events: none;
-    }
-    .stars::before, .stars::after {
-      content: '';
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      box-shadow:
-        50px 80px white, 100px 200px white, 150px 300px white, 200px 400px white,
-        250px 500px white, 300px 600px white, 350px 700px white, 400px 800px white,
-        450px 900px white, 500px 100px white, 550px 200px white, 600px 300px white,
-        650px 400px white, 700px 500px white, 750px 600px white, 800px 700px white,
-        850px 800px white, 900px 900px white, 950px 1000px white, 1000px 1100px white;
-      animation: twinkle 4s infinite ease-in-out;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 0.3; }
+    input, button {
+      margin: 5px;
+      padding: 5px;
+      font-size: 1em;
     }
   </style>
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";const firebaseConfig = {
+  apiKey: "AIzaSyA-eaOYQ9PUUlr8OtdI68p40XVzmBtl3Ho",
+  authDomain: "tic-tac-toe-e6f3e.firebaseapp.com",
+  databaseURL: "https://tic-tac-toe-e6f3e-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tic-tac-toe-e6f3e",
+  storageBucket: "tic-tac-toe-e6f3e.firebasestorage.app",
+  messagingSenderId: "178093860272",
+  appId: "1:178093860272:web:3adbb9360d7cf87ef2a275",
+  measurementId: "G-WK8PDPYHXH"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const gameId = prompt("Masukkan ID Game (bebas, bisa dibagikan ke teman):");
+const player = prompt("Masukkan simbol (X atau O):");
+
+const boardRef = ref(db, `games/${gameId}/board`);
+const turnRef = ref(db, `games/${gameId}/turn`);
+const scoreRef = ref(db, `games/${gameId}/score`);
+
+const boardSize = 3;
+const boardEl = document.getElementById("board");
+const statusEl = document.getElementById("status");
+const scoreEl = document.getElementById("score");
+let board = Array(boardSize).fill().map(() => Array(boardSize).fill(""));
+let currentTurn = "X";
+let scores = { X: 0, O: 0 };
+
+function renderBoard() {
+  boardEl.innerHTML = '';
+  boardEl.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+  board.forEach((row, i) => {
+    row.forEach((cell, j) => {
+      const div = document.createElement("div");
+      div.className = `cell ${cell}`;
+      div.textContent = cell;
+      div.onclick = () => makeMove(i, j);
+      boardEl.appendChild(div);
+    });
+  });
+}
+
+function makeMove(i, j) {
+  if (board[i][j] || currentTurn !== player) return;
+  board[i][j] = player;
+  currentTurn = player === "X" ? "O" : "X";
+  set(boardRef, board);
+  set(turnRef, currentTurn);
+}
+
+function checkWin() {
+  const lines = [
+    // Rows & Columns
+    ...board,
+    ...board[0].map((_, col) => board.map(row => row[col])),
+    // Diagonals
+    board.map((row, i) => board[i][i]),
+    board.map((row, i) => board[i][boardSize - 1 - i])
+  ];
+  for (const line of lines) {
+    if (line.every(cell => cell === "X")) return "X";
+    if (line.every(cell => cell === "O")) return "O";
+  }
+  return null;
+}
+
+function updateScore(winner) {
+  scores[winner]++;
+  set(scoreRef, scores);
+}
+
+onValue(boardRef, snapshot => {
+  if (snapshot.exists()) {
+    board = snapshot.val();
+    renderBoard();
+    const winner = checkWin();
+    if (winner) {
+      alert(`${winner} menang!`);
+      updateScore(winner);
+      board = Array(boardSize).fill().map(() => Array(boardSize).fill(""));
+      set(boardRef, board);
+    }
+  }
+});
+
+onValue(turnRef, snapshot => {
+  if (snapshot.exists()) {
+    currentTurn = snapshot.val();
+    statusEl.textContent = `Giliran: ${currentTurn}`;
+  }
+});
+
+onValue(scoreRef, snapshot => {
+  if (snapshot.exists()) {
+    scores = snapshot.val();
+    scoreEl.textContent = `Skor - X: ${scores.X}, O: ${scores.O}`;
+  }
+});
+
+// Init
+set(boardRef, board);
+set(turnRef, currentTurn);
+set(scoreRef, scores);
+renderBoard();
+
+  </script>
 </head>
 <body>
-  <!-- Bintang -->
-  <div class="stars"></div>
-
-  <header>
-    <div id="hamburger" onclick="openSidebar()">
-      <div></div><div></div><div></div>
-    </div>
-    <h1>List Order/PO</h1>
-  </header>
-
-  <div id="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-    <a href="https://wa.me/6283890156033" target="_blank">Chat Owner</a>
-    <a href="#" onclick="toggleLoginForm()">Login Admin</a>
-    <form id="loginForm" onsubmit="login(); return false;" style="display:none;">
-      <input type="text" id="username" placeholder="Username" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
-  </div>
-
-  <div id="addOrderForm">
-    <h3 id="formTitle">Tambah Order</h3>
-    <input type="text" id="namaBarang" placeholder="Nama Barang" />
-    <input type="number" id="jumlah" placeholder="Jumlah" />
-    <input type="number" id="harga" placeholder="Harga (Rp)" />
-    <input type="text" id="pemesan" placeholder="Pemesan" />
-    <input type="date" id="tanggal" />
-    <select id="status">
-      <option value="">Pilih Status</option>
-      <option value="PO">PO</option>
-      <option value="Done">Done</option>
-    </select>
-    <input type="file" id="gambar" accept="image/*" />
-    <button onclick="saveOrder()">Simpan Order</button>
-  </div>
-
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>Gambar</th>
-        <th>Nama</th>
-        <th>Jumlah</th>
-        <th>Harga</th>
-        <th>Pemesan</th>
-        <th>Tanggal</th>
-        <th>Status</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody id="ordersList"></tbody>
-  </table>
-
-  <script>
-    let isAdmin = false;
-    let editIndex = -1;
-
-    function openSidebar() {
-      document.getElementById("sidebar").style.width = "260px";
-    }
-    function closeSidebar() {
-      document.getElementById("sidebar").style.width = "0";
-    }
-
-    function toggleLoginForm() {
-      const form = document.getElementById("loginForm");
-      form.style.display = form.style.display === "none" ? "block" : "none";
-    }
-
-    function login() {
-      const user = document.getElementById("username").value;
-      const pass = document.getElementById("password").value;
-      if (user === "yann" && pass === "yann12345") {
-        alert("Login berhasil!");
-        isAdmin = true;
-        localStorage.setItem("isAdmin", "true");
-        document.getElementById("addOrderForm").style.display = "block";
-        document.getElementById("loginForm").style.display = "none";
-        document.getElementById("logoutBtn").style.display = "block";
-        closeSidebar();
-        displayOrders();
-      } else {
-        alert("Username atau Password salah!");
-      }
-    }
-
-    function logout() {
-      isAdmin = false;
-      localStorage.removeItem("isAdmin");
-      document.getElementById("addOrderForm").style.display = "none";
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("logoutBtn").style.display = "none";
-      displayOrders();
-      closeSidebar();
-    }
-
-    function saveOrder() {
-      const nama = document.getElementById("namaBarang").value;
-      const jumlah = document.getElementById("jumlah").value;
-      const harga = document.getElementById("harga").value;
-      const pemesan = document.getElementById("pemesan").value;
-      const tanggal = document.getElementById("tanggal").value;
-      const status = document.getElementById("status").value;
-      const gambarInput = document.getElementById("gambar");
-
-      if (!nama || !jumlah || !harga || !pemesan || !tanggal || !status) {
-        alert("Lengkapi semua data!");
-        return;
-      }
-
-      const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-
-      const handleSave = (gambarBase64) => {
-        const newOrder = { nama, jumlah, harga, pemesan, tanggal, status, gambar: gambarBase64 };
-
-        if (editIndex >= 0) {
-          orders[editIndex] = newOrder;
-          editIndex = -1;
-          document.getElementById("formTitle").innerText = "Tambah Order";
-        } else {
-          orders.push(newOrder);
-        }
-
-        localStorage.setItem("orders", JSON.stringify(orders));
-        document.getElementById("addOrderForm").reset();
-        displayOrders();
-      };
-
-      if (gambarInput.files.length > 0) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          handleSave(e.target.result);
-        };
-        reader.readAsDataURL(gambarInput.files[0]);
-      } else {
-        const existingImage = editIndex >= 0 ? orders[editIndex].gambar : "";
-        handleSave(existingImage);
-      }
-    }
-
-    function displayOrders() {
-      const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-      const list = document.getElementById("ordersList");
-      list.innerHTML = "";
-
-      orders.forEach((order, i) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><img src="${order.gambar || ''}" alt="-" /></td>
-          <td>${order.nama}</td>
-          <td>${order.jumlah}</td>
-          <td>Rp ${order.harga}</td>
-          <td>${order.pemesan}</td>
-          <td>${order.tanggal}</td>
-          <td>${order.status}</td>
-          <td>
-            ${isAdmin ? `
-              <button class="admin-btn edit-btn" onclick="editOrder(${i})">Edit</button>
-              <button class="admin-btn" onclick="deleteOrder(${i})">Hapus</button>
-            ` : "-"}
-          </td>
-        `;
-        list.appendChild(row);
-      });
-    }
-
-    function deleteOrder(index) {
-      if (confirm("Hapus order ini?")) {
-        let orders = JSON.parse(localStorage.getItem("orders") || "[]");
-        orders.splice(index, 1);
-        localStorage.setItem("orders", JSON.stringify(orders));
-        displayOrders();
-      }
-    }
-
-    function editOrder(index) {
-      const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-      const order = orders[index];
-      document.getElementById("namaBarang").value = order.nama;
-      document.getElementById("jumlah").value = order.jumlah;
-      document.getElementById("harga").value = order.harga;
-      document.getElementById("pemesan").value = order.pemesan;
-      document.getElementById("tanggal").value = order.tanggal;
-      document.getElementById("status").value = order.status;
-      editIndex = index;
-      document.getElementById("formTitle").innerText = "Edit Order";
-      document.getElementById("addOrderForm").scrollIntoView({ behavior: "smooth" });
-    }
-
-    if (localStorage.getItem("isAdmin") === "true") {
-      isAdmin = true;
-      document.getElementById("addOrderForm").style.display = "block";
-      document.getElementById("loginForm").style.display = "none";
-      document.getElementById("logoutBtn").style.display = "block";
-    }
-
-    displayOrders();
-  </script>
+  <h1>Tic Tac Toe Online</h1>
+  <div id="status">Giliran: X</div>
+  <div id="scoreboard"><span id="score">Skor - X: 0, O: 0</span></div>
+  <div id="board"></div>
 </body>
 </html>
